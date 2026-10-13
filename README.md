@@ -1,6 +1,15 @@
-# NLP Lab
+# NLP Lab Programs
 
-## 1. Text Processing, Vocabulary and Set Operations
+## 1. Given a text document, perform the following tasks:
+i. Count the number of words and the number of distinct words.
+
+ii. Using list addition, set and sorted operations, compute the vocabulary of the sentences `sent1` to `sent8`.
+
+iii. Define `sent` to be the list of words `['she', 'sells', 'sea', 'shells', 'by', 'the', 'sea', 'shore']`. Write code to:
+
+a. Print all words beginning with `sh`.
+
+b. Print all words longer than four characters.
 
 ```python
 import nltk
@@ -9,23 +18,28 @@ from nltk.tokenize import word_tokenize
 text = "She sells sea shells by the sea shore."
 words = [w.lower() for w in word_tokenize(text) if w.isalpha()]
 
-print("Total:", len(words))
-print("Distinct:", len(set(words)))
-print("Vocabulary:", sorted(set(words)))
+print("Total words:", len(words))
+print("Distinct words:", len(set(words)))
 
-s1 = ['she', 'sells', 'sea']
-s2 = ['sea', 'shore']
+sent1 = ['she', 'sells', 'sea']
+sent2 = ['sea', 'shore']
+sent3 = ['shells', 'by']
+sent4 = ['the', 'sea']
+sent5 = ['shore', 'she']
+sent6 = ['sells', 'shells']
+sent7 = ['by', 'the']
+sent8 = ['sea', 'shore']
 
-print("Union:", sorted(set(s1) | set(s2)))
-print("Intersection:", sorted(set(s1) & set(s2)))
-print("Difference:", sorted(set(s1) - set(s2)))
+vocab = sorted(set(sent1 + sent2 + sent3 + sent4 +
+                   sent5 + sent6 + sent7 + sent8))
+print("Vocabulary:", vocab)
 
 sent = ['she', 'sells', 'sea', 'shells', 'by', 'the', 'sea', 'shore']
 print("Starts with sh:", [w for w in sent if w.startswith('sh')])
 print("Length > 4:", [w for w in sent if len(w) > 4])
 ```
 
-## 2. Conditional Frequency Distribution
+## 2. Write a Python program to find the Conditional Frequency Distribution (CFD) of words in different genres of the Brown Corpus.
 
 ```python
 import nltk
@@ -34,6 +48,7 @@ from nltk.corpus import brown
 nltk.download('brown')
 
 genres = ['news', 'romance', 'humor']
+
 cfd = nltk.ConditionalFreqDist(
     (g, w.lower())
     for g in genres
@@ -41,15 +56,19 @@ cfd = nltk.ConditionalFreqDist(
     if w.isalpha()
 )
 
-cfd.tabulate(conditions=genres, samples=['love', 'man', 'woman'])
+cfd.tabulate(
+    conditions=genres,
+    samples=['love', 'man', 'woman']
+)
 ```
 
-## 3. Morphological Analysis and Generation
+## 3. Write a Python program to perform morphological analysis and generation of words using root words and suffixes. Demonstrate the inverse process of recovering the root word from a generated word.
 
 ```python
 root = "play"
 suffixes = ["s", "ed", "ing", "er"]
 
+print("Generated words:")
 for s in suffixes:
     print(root + s)
 
@@ -60,7 +79,7 @@ for s in suffixes:
         break
 ```
 
-## 4. Add-Delete Table
+## 4. Write a Python program to demonstrate word morphology using an Add-Delete table for generating word forms and recovering the root word.
 
 ```python
 table = {
@@ -68,6 +87,7 @@ table = {
     "happy": ["ness", "ly"]
 }
 
+print("Generated words:")
 for root, suffixes in table.items():
     for s in suffixes:
         print(root + s)
@@ -79,7 +99,7 @@ if word.endswith(suffix):
     print("Root:", word[:-len(suffix)])
 ```
 
-## 5. Tokenization and Sentence Segmentation
+## 5. Write a Python program to implement tokenization and sentence segmentation using regular expressions and NLTK.
 
 ```python
 import nltk
@@ -91,7 +111,7 @@ print("Sentences:", nltk.sent_tokenize(text))
 print("Words:", re.findall(r"\b\w+\b", text))
 ```
 
-## 6. Stemming and Lemmatization
+## 6. Write a Python program to perform stemming and lemmatization on a given set of words using NLTK.
 
 ```python
 import nltk
@@ -104,10 +124,11 @@ ps = PorterStemmer()
 lm = WordNetLemmatizer()
 
 for w in words:
-    print(w, ps.stem(w), lm.lemmatize(w))
+    print(w, "Stem:", ps.stem(w),
+          "Lemma:", lm.lemmatize(w))
 ```
 
-## 7. Bigrams and Sentence Probability
+## 7. Write a Python program to calculate bigrams from a given corpus and calculate the probability of a sentence using bigram probabilities.
 
 ```python
 from nltk.util import bigrams
@@ -115,6 +136,7 @@ from collections import Counter
 
 words = ['i', 'love', 'nlp']
 bg = list(bigrams(words))
+
 counts = Counter(bg)
 uni = Counter(words)
 
@@ -122,10 +144,10 @@ p = (counts[('i', 'love')] / uni['i']) * \
     (counts[('love', 'nlp')] / uni['love'])
 
 print("Bigrams:", bg)
-print("Probability:", p)
+print("Sentence probability:", p)
 ```
 
-## 8. N-Gram Language Model
+## 8. Write a Python program to implement an N-Gram Language Model and calculate the conditional probability of a word given its preceding context.
 
 ```python
 from nltk.util import ngrams
@@ -142,7 +164,7 @@ print("N-grams:", ng)
 print("P(love|i):", counts[('i', 'love')] / context['i'])
 ```
 
-## 9. HMM Transition and Emission Probabilities
+## 9. Write a Python program to calculate the emission and transition probability matrices required for Parts-of-Speech tagging using a Hidden Markov Model (HMM).
 
 ```python
 import nltk
@@ -166,11 +188,11 @@ for sent in data:
 tc = ConditionalFreqDist(trans)
 ec = ConditionalFreqDist(emis)
 
-print("Transition:", tc['DET'].freq('NOUN'))
-print("Emission:", ec['NOUN'].freq('time'))
+print("Transition P(NOUN|DET):", tc['DET'].freq('NOUN'))
+print("Emission P(time|NOUN):", ec['NOUN'].freq('time'))
 ```
 
-## 10. POS Tagging using Viterbi
+## 10. Write a Python program to find the Parts-of-Speech tags of words in a given sentence using Viterbi decoding with a Hidden Markov Model.
 
 ```python
 import nltk
@@ -190,7 +212,7 @@ sentence = "the market is good".split()
 print(model.tag(sentence))
 ```
 
-## 11. Context-Sensitive POS Tagger using Trigrams
+## 11. Develop a context-sensitive POS tagger using HMM and trigram features. Demonstrate how the size of the training corpus affects POS tagging.
 
 ```python
 import nltk
@@ -201,25 +223,32 @@ nltk.download('universal_tagset')
 
 data = nltk.corpus.brown.tagged_sents(
     categories='news', tagset='universal'
-)[:500]
+)
 
-u = UnigramTagger(data)
-b = BigramTagger(data, backoff=u)
-t = TrigramTagger(data, backoff=b)
+for size in [100, 300, 500]:
+    train = data[:size]
 
-print(t.tag("the market is growing".split()))
+    u = UnigramTagger(train)
+    b = BigramTagger(train, backoff=u)
+    t = TrigramTagger(train, backoff=b)
+
+    print("Training size:", size)
+    print(t.tag("the market is growing".split()))
 ```
 
-## 12. Feature Extraction and Document Classification
+## 12. Write a Python program to implement a feature extractor and build a robust, context-sensitive document classification model using TF-IDF and Naive Bayes.
 
 ```python
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
 docs = [
-    "team won the match", "player scored a goal",
-    "new AI model released", "computer learning technology"
+    "team won the match",
+    "player scored a goal",
+    "new AI model released",
+    "computer learning technology"
 ]
+
 labels = ['sports', 'sports', 'tech', 'tech']
 
 tfidf = TfidfVectorizer(ngram_range=(1, 2))
@@ -229,10 +258,10 @@ model = MultinomialNB()
 model.fit(X, labels)
 
 test = tfidf.transform(["AI technology model"])
-print(model.predict(test))
+print("Predicted class:", model.predict(test))
 ```
 
-## 13. Feature Selection and Training Corpus Size
+## 13. Write a Python program to implement feature selection using the chi-square test, train a document classification model on different training corpus sizes, and observe the effect of corpus size on prediction.
 
 ```python
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -258,5 +287,6 @@ for size in [4, 6, 8]:
     model = MultinomialNB()
     model.fit(X, labels[:size])
 
-    print(size, model.predict(X[:1]))
+    print("Corpus size:", size)
+    print("Prediction:", model.predict(X[:1]))
 ```
